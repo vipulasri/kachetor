@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.vipulasri.kachetor">
+
+    <application>
+        <provider
+            android:name="com.vipulasri.kachetor.KachetorContentProvider"
+            android:authorities="${applicationId}.kachetorcontentprovider"
+            android:exported="false"
+            android:initOrder="100" />
+    </application>
+
+</manifest>

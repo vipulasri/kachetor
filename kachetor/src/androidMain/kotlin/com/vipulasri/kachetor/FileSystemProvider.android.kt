@@ -16,16 +16,23 @@
 
 package com.vipulasri.kachetor
 
-import android.os.Environment
+import android.content.Context
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
+import java.util.concurrent.atomic.AtomicReference
 
 internal actual object FileSystemProvider {
+
+    private var context = AtomicReference<Context>(null)
+
+    fun initialize(context: Context?) {
+        this.context.set(context)
+    }
 
     actual val fileSystem: FileSystem
         get() = FileSystem.SYSTEM
 
     actual val cacheDirectoryPath: Path?
-        get() = Environment.getExternalStorageDirectory().absolutePath.toPath()
+        get() = context.get().cacheDir.absolutePath.toPath()
 }
