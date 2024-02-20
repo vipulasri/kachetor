@@ -1,8 +1,10 @@
 package com.vipulasri.kachetor.sample.shared
 
+import com.vipulasri.kachetor.KachetorStorage
 import com.vipulasri.kachetor.sample.shared.model.Rocket
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -32,6 +34,9 @@ class SpacexApi {
             install(Logging) {
                 logger = Logger.SIMPLE
                 level = LogLevel.ALL
+            }
+            install(HttpCache) {
+                publicStorage(KachetorStorage(50 * 1024 * 1024))
             }
             expectSuccess = true
         }
