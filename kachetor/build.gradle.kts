@@ -25,7 +25,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            implementation(libs.ktor.core)
+            implementation(libs.okio)
+            implementation(libs.kache)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

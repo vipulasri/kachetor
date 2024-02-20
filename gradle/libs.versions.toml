@@ -23,6 +23,9 @@ ktor-kotlinx = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref
 ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 
+okio = "com.squareup.okio:okio:3.7.0"
+kache = "com.mayakapps.kache:file-kache:2.1.0-beta05"
+
 [bundles]
 ktor = ["ktor-core", "ktor-logging", "ktor-cio", "ktor-kotlinx"]
 
