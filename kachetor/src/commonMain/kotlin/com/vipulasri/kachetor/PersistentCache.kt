@@ -50,10 +50,9 @@ internal class PersistentCache internal constructor(
 
     override suspend fun store(url: Url, data: CachedResponseData) = withContext(dispatcher) {
         val cache = getOkioFileCache()
-        val caches = cache.read(url.toString())
-            ?.filterNot { it.varyKeys == data.varyKeys }
-            ?.plus(data)
-        cache.write(url.toString(), caches ?: emptyList())
+        val caches = mutableSetOf(data) // adding the new data initially to the set
+        cache.read(url.toString())?.let { caches.addAll(it) }
+        cache.write(url.toString(), caches.toList())
         cache.close()
     }
 
@@ -78,10 +77,11 @@ internal class PersistentCache internal constructor(
         caches: List<CachedResponseData>
     ): Path? {
         return put(key) { cachePath ->
-            fileSystem.sink(cachePath).buffer().use {
-                it.writeInt(caches.size)
-                for (cache in caches) {
-                    writeCache(it, cache)
+            fileSystem.sink(cachePath).buffer().use { bufferedSink ->
+                bufferedSink.writeInt(caches.size)
+                val sortedCaches = caches.sortedByDescending { it.expires.timestamp }.toSet()
+                for (cache in sortedCaches) {
+                    writeCache(bufferedSink, cache)
                 }
             }
             true
