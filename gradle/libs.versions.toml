@@ -6,6 +6,7 @@ compose-compiler = "1.5.9"
 compose-material3 = "1.2.0"
 androidx-activityCompose = "1.8.2"
 ktor = "2.3.8"
+coroutines = "1.7.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -25,6 +26,8 @@ ktor-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 
 okio = "com.squareup.okio:okio:3.7.0"
 kache = "com.mayakapps.kache:file-kache:2.1.0-beta05"
+
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 [bundles]
 ktor = ["ktor-core", "ktor-logging", "ktor-cio", "ktor-kotlinx"]
