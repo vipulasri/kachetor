@@ -73,10 +73,11 @@ class KachetorStorage internal constructor(
             if (persistentCache != null) {
                 persistentCache.store(url, data)
             } else {
+                logInMemoryUsage("error creating persistent cache.")
                 inMemoryCache.store(url, data)
             }
         } catch (exception: Exception) {
-            println("$TAG, Error storing response persistently: ${exception.message}")
+            logInMemoryUsage(exception.message ?: "error storing response in persistence storage")
             inMemoryCache.store(url, data)
         }
     }
@@ -86,20 +87,28 @@ class KachetorStorage internal constructor(
             if (persistentCache != null) {
                 persistentCache.find(url, varyKeys)
             } else {
+                logInMemoryUsage("error creating persistent cache.")
                 inMemoryCache.find(url, varyKeys)
             }
         } catch (exception: Exception) {
-            println("$TAG, Error finding response from persistence: ${exception.message}")
+            logInMemoryUsage(exception.message ?: "error finding response from persistence storage")
             inMemoryCache.find(url, varyKeys)
         }
     }
 
     override suspend fun findAll(url: Url): Set<CachedResponseData> {
         return try {
-            persistentCache?.findAll(url) ?: inMemoryCache.findAll(url)
+            persistentCache?.findAll(url) ?: kotlin.run {
+                logInMemoryUsage("error creating persistent cache.")
+                inMemoryCache.findAll(url)
+            }
         } catch (exception: Exception) {
-            println("$TAG, Error finding response from persistence: ${exception.message}")
+            logInMemoryUsage(exception.message ?: "error finding response from persistence storage")
             inMemoryCache.findAll(url)
         }
+    }
+
+    private fun logInMemoryUsage(message: String) {
+        println("$TAG: Using in-memory cache, $message")
     }
 }
