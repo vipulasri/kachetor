@@ -27,8 +27,8 @@ import okio.Path
 import okio.Path.Companion.toPath
 
 class KachetorStorage internal constructor(
-    private val persistentCache: PersistentCache? = null,
-    private val inMemoryCache: InMemoryCache
+    private val persistentCache: CacheStorage? = null,
+    private val inMemoryCache: CacheStorage
 ) : CacheStorage {
 
     companion object {
@@ -70,7 +70,11 @@ class KachetorStorage internal constructor(
 
     override suspend fun store(url: Url, data: CachedResponseData) {
         try {
-            persistentCache?.store(url, data)
+            if (persistentCache != null) {
+                persistentCache.store(url, data)
+            } else {
+                inMemoryCache.store(url, data)
+            }
         } catch (exception: Exception) {
             println("$TAG, Error storing response persistently: ${exception.message}")
             inMemoryCache.store(url, data)
@@ -79,7 +83,11 @@ class KachetorStorage internal constructor(
 
     override suspend fun find(url: Url, varyKeys: Map<String, String>): CachedResponseData? {
         return try {
-            persistentCache?.find(url, varyKeys)
+            if (persistentCache != null) {
+                persistentCache.find(url, varyKeys)
+            } else {
+                inMemoryCache.find(url, varyKeys)
+            }
         } catch (exception: Exception) {
             println("$TAG, Error finding response from persistence: ${exception.message}")
             inMemoryCache.find(url, varyKeys)
@@ -88,7 +96,7 @@ class KachetorStorage internal constructor(
 
     override suspend fun findAll(url: Url): Set<CachedResponseData> {
         return try {
-            persistentCache?.findAll(url) ?: emptySet()
+            persistentCache?.findAll(url) ?: inMemoryCache.findAll(url)
         } catch (exception: Exception) {
             println("$TAG, Error finding response from persistence: ${exception.message}")
             inMemoryCache.findAll(url)

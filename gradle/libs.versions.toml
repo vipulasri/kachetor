@@ -7,7 +7,8 @@ compose-material3 = "1.2.0"
 androidx-activityCompose = "1.8.2"
 ktor = "2.3.8"
 coroutines = "1.7.3"
-okio="3.7.0"
+okio = "3.7.0"
+mockative = "2.0.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -31,6 +32,9 @@ okio-fakeFilesystem = { module = "com.squareup.okio:okio-fakefilesystem", versio
 kache = "com.mayakapps.kache:file-kache:2.1.0-beta05"
 
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+mockative = { module = "io.mockative:mockative", version.ref = "mockative" }
+mockative-processor = { module = "io.mockative:mockative-processor", version.ref = "mockative" }
 
 [bundles]
 ktor = ["ktor-core", "ktor-logging", "ktor-cio", "ktor-kotlinx"]
