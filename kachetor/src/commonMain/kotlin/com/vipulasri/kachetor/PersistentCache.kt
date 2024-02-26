@@ -45,7 +45,9 @@ internal class PersistentCache internal constructor(
         return OkioFileKache(
             directory = directory,
             maxSize = maxSize
-        )
+        ) {
+            fileSystem = this@PersistentCache.fileSystem
+        }
     }
 
     override suspend fun store(url: Url, data: CachedResponseData) = withContext(dispatcher) {
