@@ -8,10 +8,14 @@ Kachetor is an easy-to-use Kotlin Multiplatform caching library to support persi
 * **Android**
 * **iOS** (iosArm64, iosX64, iosSimulatorArm64)
 
+## Why use Kachetor?
+* It complements Ktor by enabling persistent caching on platforms beyond the JVM, which [Ktor]((https://ktor.io/docs/client-caching.html#persistent_cache)) currently supports.
+* Uses LRU eviction strategy by using [Kache](https://github.com/MayakaApps/Kache) a Kotlin Multiplatform caching library.
+
 ## Setup (Gradle)
 
 ```kotlin
-dependencies {
+commonMain.dependencies {
     implementation("com.vipulasri.kachetor:kachetor:<version>")
 }
 ```
@@ -20,7 +24,8 @@ Don't forget to replace <version> with the latest found on the badges above or t
 
 ## Usage
 
-Simply provide the `Kachetor` instance to the `HttpCache` plugin and you are good to go.
+### Simple
+Provide the `Kachetor` instance to the `HttpCache` plugin and you are good to go.
 
 ```kotlin
 install(HttpCache) {
@@ -28,8 +33,22 @@ install(HttpCache) {
 }
 ```
 
-Kachetor will use the default cache directory on each platform. For Android, it will use the cache directory and for iOS, it will use the `caches` directory.
-It can also fallback to using in-memory cache if the persistent cache is not available.
+Kachetor uses platform-specific default cache directories:
+* **Android**: `context.cacheDir` - This refers to the application's cache directory on the Android device.
+* **iOS**: `caches` directory - This refers to the application's caches directory within the iOS sandbox.
+
+### Advanced
+
+Allows storage of the cache in a custom directory:
+
+```kotlin
+install(HttpCache) {
+    publicStorage(KachetorStorage("provide-platform-specific-directory-path", 10 * 1024 * 1024)) 
+}
+```
+
+## Fallback Mechanism 
+If Kachetor cannot create a persistent cache due to an issue, it will use an in-memory cache as a fallback.
 
 ## License
 
