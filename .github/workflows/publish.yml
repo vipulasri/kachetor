@@ -4,10 +4,8 @@ on: workflow_dispatch
 
 jobs:
   publish:
-    if: github.ref == 'refs/heads/main'
-
-    runs-on: macos-13
-    needs: [ build ]
+    name: Publish
+    runs-on: macos-latest
     timeout-minutes: 30
 
     steps:
